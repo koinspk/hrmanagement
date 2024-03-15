@@ -10,5 +10,4 @@ userRouter.delete('/:id',userController.findbyIdanddelete);
 userRouter.patch('/:id',userController.findbyIdandUpdate);
 
 
-
 module.exports = userRouter;
