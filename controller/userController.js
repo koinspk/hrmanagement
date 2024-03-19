@@ -6,6 +6,7 @@ const _post = async(req,res) => {
         let response = await userModel.create(record);
         return res.status(201).send(response);
     } catch (error) {
+        console.log(error);
         return res.status(403).send(error)
     }
 }
