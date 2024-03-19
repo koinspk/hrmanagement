@@ -3,6 +3,11 @@ const express = require('express');
 const router = express.Router();
 const userRoute = require('./userRoute');
 
+
+
+//user path
 router.use('/user',userRoute);
+
+
 
 module.exports = router;

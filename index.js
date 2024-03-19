@@ -3,7 +3,7 @@ const app = express();
 const db = require('./dbconfig/db')();
 const indexRoute = require('./routes');
 const bodyParser = require('body-parser');
-
+const user = require('./model/user');
 var cors = require('cors');
 
 app.use(cors());

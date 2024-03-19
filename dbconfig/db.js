@@ -6,7 +6,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/hrmanagement');
 mongoose.connection.on('open', function (ref) {
     console.log('Connected to mongo server.');
     mongoose.connection.db.listCollections().toArray(function (err, names) {
-        // console.log(names); 
+        console.log(names); 
     });
 })  
 mongoose.connection.on('uncaughtException', (error) => {
