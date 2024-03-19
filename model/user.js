@@ -1,6 +1,6 @@
 // const { Email } = require('@mui/icons-material');
 const mongoose = require('mongoose');
-const { Schema} = mongoose;
+const { Schema } = mongoose;
 const bycrpt = require("bcrypt");
 const moment = require('moment');
 
@@ -44,12 +44,14 @@ const EmergencyContact=new Schema({
 
 });
 
+
 const userSchema = new Schema({
     personalinformation : personalInformation,
     contactinformation:contactInformation,
     employementdetails :employementDetails,
     compensationandbenefits:compensationAndBenefits,
-    emergencycontact:EmergencyContact
+    emergencycontact:EmergencyContact,
+    // group:Group
 
 },
 { timestamps: true},
@@ -80,4 +82,18 @@ userSchema.pre('save', async function (next) {
 
 // userSchema.p
 
-module.exports = mongoose.model('User', userSchema);
+
+
+
+// const Group = new mongoose.Schema({ 
+//     groupname: {type:String}, 
+//     members_id: {type: mongoose.Schema.Types.ObjectId}
+// })
+
+
+
+//////////////////////////////////////////////////////////////////////
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
