@@ -1,4 +1,4 @@
-const userModel = require('../model/user');
+const userModel = require('../model/user');   //usermodel is a class  //model call
 
 const _post = async(req,res) => {
     const record = req.body;
