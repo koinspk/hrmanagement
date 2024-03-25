@@ -56,19 +56,19 @@ const findbyIdandUpdate = async(req,res) => {
 }
 }
 
-const masterGroup = new Usergroup({
-    name: 'Master Group',
-    isMaster: true
-});
+// const masterGroup = new Usergroup({
+//     name: 'Master Group',
+//     isMaster: true
+// });
 
 // Save the master group to the database
-masterGroup.save()
-    .then(savedMasterGroup => {
-        console.log('Master group created:', savedMasterGroup);
-    })
-    .catch(error => {
-        console.error('Error creating master group:', error);
-    });
+// masterGroup.save()
+    // .then(savedMasterGroup => {
+    //     console.log('Master group created:', savedMasterGroup);
+    // })
+    // .catch(error => {
+    //     console.error('Error creating master group:', error);
+    // });
 
 
 
