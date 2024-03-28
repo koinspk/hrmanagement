@@ -1,21 +1,20 @@
 // const { Email } = require('@mui/icons-material');
 const mongoose = require('mongoose');
-const { Schema} = mongoose;
+const { Schema } = mongoose;
 const bycrpt = require("bcrypt");
-const moment = require('moment');
-
-//personalInf
+const moment = require("moment");
+//personalInfor
 const personalInformation = new Schema({
     name : { type : String , required : true  },
     employeeid : { type : Number , required : true },
-    nationality:{ type:String , required : true },
-    maritalstatus:{type : String , enum : [ 'Married' , 'Single' ] , required : true },
-    gender : { type : String , enum : [ 'Male' , 'Female' , 'Others' ] , required : true  },
+    nationality:{ type:String },
+    maritalstatus:{type : String , enum : [ 'Married' , 'Unmarried' ] , required : true },
+    gender : { type : String , enum : [ 'Male' , 'Female' , 'Others' ] },
     dob:{type:Date,required:true},
     password : String
 });
 
-//contactInf
+//contactInfor
 const contactInformation = new Schema({
     emailaddress:{type:String , required:true},
     phonenumber:{type:Number,required:true},
@@ -24,17 +23,19 @@ const contactInformation = new Schema({
 
 //Employeedetails
 const employementDetails = new Schema({
-    department:{type:String,required:true},
-    position:{type:String,required:true},
-    manager:{type:String,required:true},
-    startdate:{type:Date,required:true}
+    department:{type:String},
+    jobtitle:{type:String,required:true},
+    manager:{type:String},
+    startdate:{type:Date,required:true},
+    skills:{type:[String],required:true},
+    role:{type:String,required:true}
 });
 
 //compensation
 const compensationAndBenefits=new Schema({
-    salary:{type:Number ,required:true},
-    benefits:{type:String ,required:true},
-    bankaccountdetails:{type:Number,required:true}
+    salary:{type:Number },
+    benefits:{type:String },
+    bankaccount:{type:Number,required:true}
 });
 
 //emergencyNum 
@@ -44,31 +45,24 @@ const EmergencyContact=new Schema({
 
 });
 
+
+//UserSchema
 const userSchema = new Schema({
     personalinformation : personalInformation,
     contactinformation:contactInformation,
-    employementdetails :employementDetails,
-    compensationandbenefits:compensationAndBenefits,
-    emergencycontact:EmergencyContact
-
+    employmentdetails :employementDetails,
+    compensation:compensationAndBenefits,
+    emergencycontacts:EmergencyContact,
+    imagePath:String
 },
 { timestamps: true},
 );
 
 
-// Define virtual property for password
-// userSchema.virtual('password').get(function () {
-//     console.log(this.personalinformation.dob);
-//     const firstName = this.personalinformation.name.slice(0, 4).toLowerCase();
-//     const year = this.personalinformation.dob.getFullYear().toString();
-//     return firstName + year;
-// });
-
-// Hash password before saving
 userSchema.pre('save', async function (next) {
- //   if (!this.isModified('personalinformation')) return next();
     try {
         const firstName = this.personalinformation.name.slice(0, 4).toLowerCase();
+        // console.log(firstName);
         let year = moment(this.personalinformation.dob).format('yyyy');
         const hashedPassword = await bycrpt.hash(firstName+year, 10);
         this.personalinformation.password = hashedPassword; // Save hashed password to the nested field
@@ -78,6 +72,9 @@ userSchema.pre('save', async function (next) {
     }
 });
 
-// userSchema.p
 
-module.exports = mongoose.model('User', userSchema);
+//////////////////////////////////////////////////////////////////////
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
