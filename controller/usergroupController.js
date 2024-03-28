@@ -57,7 +57,6 @@ const findbyIdandUpdate = async(req,res) => {
 }
 
 
-
 module.exports = {
     _post,
     _get,

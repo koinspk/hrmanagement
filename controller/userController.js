@@ -20,18 +20,19 @@ const _post = async(req,res) =>{
 
 
 
-const _get = async(req,res) => {
+const _get = async(req,res) =>{
     const limit = parseInt(req.query.limit) || 10;
     const skip = parseInt(req.query.limit) || 0;
     try {
         let response = await userModel.find().limit(limit).skip(skip);
         const totalCount = await userModel.find().countDocuments();
-        return res.status(201).send({response , totalCount});
+        return res.status(201).send({response,totalCount});
     } catch (error) {
         return res.status(403).send(error)
     }
     
 }
+
  
 
 const findbyId = async(req,res) => {
