@@ -8,7 +8,7 @@ const personalInformation = new Schema({
     name : { type : String , required : true  },
     employeeid : { type : Number , required : true },
     nationality:{ type:String },
-    maritalstatus:{type : String , enum : [ 'married' , 'unmarried' ] , required : true },
+    maritalstatus:{type : String , enum : [ 'Married' , 'Unmarried' ] , required : true },
     gender : { type : String , enum : [ 'Male' , 'Female' , 'Others' ] },
     dob:{type:Date,required:true},
     password : String
@@ -24,16 +24,18 @@ const contactInformation = new Schema({
 //Employeedetails
 const employementDetails = new Schema({
     department:{type:String},
-    position:{type:String,required:true},
+    jobtitle:{type:String,required:true},
     manager:{type:String},
-    startdate:{type:Date,required:true}
+    startdate:{type:Date,required:true},
+    skills:{type:[String],required:true},
+    role:{type:String,required:true}
 });
 
 //compensation
 const compensationAndBenefits=new Schema({
     salary:{type:Number },
     benefits:{type:String },
-    bankaccountdetails:{type:Number,required:true}
+    bankaccount:{type:Number,required:true}
 });
 
 //emergencyNum 
@@ -43,23 +45,16 @@ const EmergencyContact=new Schema({
 
 });
 
-<<<<<<< HEAD
-//UserSchema
-=======
 
->>>>>>> 5048b048e5a28a746e70a08cc5ea9f0355c324b8
+//UserSchema
 const userSchema = new Schema({
     personalinformation : personalInformation,
     contactinformation:contactInformation,
-    employementdetails :employementDetails,
-    compensationandbenefits:compensationAndBenefits,
-    emergencycontact:EmergencyContact,
-<<<<<<< HEAD
-    profiledocument:String
-=======
-    // group:Group
+    employmentdetails :employementDetails,
+    compensation:compensationAndBenefits,
+    emergencycontacts:EmergencyContact,
+    imagePath:String
 
->>>>>>> 5048b048e5a28a746e70a08cc5ea9f0355c324b8
 },
 { timestamps: true},
 );
@@ -79,15 +74,6 @@ userSchema.pre('save', async function (next) {
 });
 
 // userSchema.p
-
-
-
-
-// const Group = new mongoose.Schema({ 
-//     groupname: {type:String}, 
-//     members_id: {type: mongoose.Schema.Types.ObjectId}
-// })
-
 
 
 //////////////////////////////////////////////////////////////////////

@@ -2,7 +2,9 @@ const express = require('express');
 const userRouter = express.Router();
 const tokenVerify = require("../helpers/verifyToken")
 const userController = require('../controller/userController');
+const upload = require('../helpers/multerConfig')
 
+//set Route
 userRouter.post('/',userController._post);
 userRouter.get('/',userController._get);
 userRouter.get('/:id',userController.findbyId);
@@ -13,10 +15,10 @@ userRouter.get('/protected-route', tokenVerify.verifyAccessToken, (req, res) => 
   res.json({ message: 'Access granted', user: req.user });
   });
 userRouter.post('/refresh-token', tokenVerify.verifyRefreshToken, (req, res) => {
-  const newAccessToken = jwt.sign({ userId: req.user.userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+  const newAccessToken = jwt.sign({ userId: req.user.userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.NEWREFRESH_TOKEN_EXP });
   res.json({ accessToken: newAccessToken });
 });
-
+userRouter.post('/:id/upload',upload.single('image'),userController.handleUpload)
 
 
 
