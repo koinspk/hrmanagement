@@ -54,7 +54,6 @@ const userSchema = new Schema({
     compensation:compensationAndBenefits,
     emergencycontacts:EmergencyContact,
     imagePath:String
-
 },
 { timestamps: true},
 );
@@ -72,10 +71,6 @@ userSchema.pre('save', async function (next) {
         return next(err);
     }
 });
-
-
-// userSchema.p
-
 
 
 //////////////////////////////////////////////////////////////////////
