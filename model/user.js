@@ -27,8 +27,7 @@ const employementDetails = new Schema({
     jobtitle:{type:String,required:true},
     manager:{type:String},
     startdate:{type:Date,required:true},
-    skills:{type:[String],required:true},
-    role:{type:String,required:true}
+    skills:{type:[String],required:true}
 });
 
 //compensation

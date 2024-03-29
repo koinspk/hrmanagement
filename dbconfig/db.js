@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 module.exports = function () {
-mongoose.connect('mongodb://127.0.0.1:27017/hrmanagement');  
+mongoose.connect('mongodb://127.0.0.1:27017/hrmanagement');    //connect the database in mangoose
 mongoose.connection.on('open', function (ref) {
     console.log('Connected to mongo server.');
     mongoose.connection.db.listCollections().toArray(function (err, names) {

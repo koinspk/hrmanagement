@@ -18,7 +18,7 @@ userRouter.post('/refresh-token', tokenVerify.verifyRefreshToken, (req, res) => 
   const newAccessToken = jwt.sign({ userId: req.user.userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.NEWREFRESH_TOKEN_EXP });
   res.json({ accessToken: newAccessToken });
 });
-userRouter.post('/:id/upload',upload.single('image'),userController.handleUpload)
+userRouter.post('/upload',upload.single('image'),userController.handleUpload)
 
 
 
