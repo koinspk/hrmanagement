@@ -9,5 +9,4 @@ userRouter.get('/:id',clientController.findbyId);
 userRouter.delete('/:id',clientController.findbyIdanddelete);
 userRouter.patch('/:id',clientController.findbyIdandUpdate);
 
-
 module.exports = userRouter;

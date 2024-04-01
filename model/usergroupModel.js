@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-// const slugify = require('slugify');
 
 
 const usergroupSchema = new Schema({
@@ -10,8 +9,6 @@ const usergroupSchema = new Schema({
     }],
     slug: { type: String,unique: true },
 });
-
-
 
 
 
