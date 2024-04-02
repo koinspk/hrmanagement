@@ -15,7 +15,7 @@ const _post = async(req,res) => {
 
 const _get = async(req,res) => {
     try {
-        let response = await usergroupModel.find();
+        let response = await usergroupModel.find().populate('user');
         return res.status(201).send(response);
     } catch (error) {
         return res.status(403).send(error)

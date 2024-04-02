@@ -1,5 +1,4 @@
-const employeeModel = require('../model/employeeModel');
-const moment = require("moment");
+const employeeModel = require('../model/attendanceModel');
 
 const _post = async(req,res) => {
     const record = req.body;
@@ -49,12 +48,49 @@ const findbyIdanddelete = async(req,res) => {
 const findbyIdandUpdate = async(req,res) => {
     try {
         const { id } = req.params;
-        let response = await employeeModel.findByIdAndUpdate(id,req.body);
-        return res.status(201).send(response);
+        const { type, checkin, checkout, breaktime  } = req.body;
+        const employee = await employeeModel.findById(id);
+        switch (type) {
+            case 'checkin':
+                if (!checkin && req.body.hasOwnProperty('checkin')) {     //hasOwnProperty used to check if an object has a specific property
+                    employee.checkin = new Date(checkin);
+                    employee.save();
+                }
+                break;
+
+            case 'checkout':
+                if (!checkout && req.body.hasOwnProperty('checkout')) {
+                    employee.checkout = new Date(checkout);
+                    await employee.save();
+                }
+                break;
+
+            case 'breaktime':
+                employee.breaktime.push(new Date(breaktime));
+           
+                await employee.save();
+                return res.status(200).json({ message: 'Break time added successfully', employee });
+            default:
+                return res.status(400).json({ error: 'Invalid type' });
+        }
     } catch (error) {
-        return res.status(403).send(error)
-}
-}
+        return res.status(500).send({ error: 'Internal server error' });
+    }
+};
+
+
+// const pause = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         employee.paused = true; 
+//         await employee.save();
+
+//         return res.status(200).json({ message: 'Employee shift paused successfully', employee });
+//     } catch (error) {
+    
+//         return res.status(500).json({ error: 'Internal server error' });
+//     }
+// };
 
 const working_hours = async (req, res) => {
     try {

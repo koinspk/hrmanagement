@@ -11,7 +11,7 @@ const clientSchema = new Schema({
     city:{type:String,require:true},
     state:{type:String,require:true},
     zipcode:{type:String,require:true},
-    country:countrySchema
+    country:{ type: Schema.Types.ObjectId, ref: 'Country' }
 },
 { timestamps: true})
 

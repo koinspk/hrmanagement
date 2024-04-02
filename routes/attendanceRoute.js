@@ -1,8 +1,8 @@
 const express = require('express');
 const userRouter = express.Router();
 
-const employeeController = require('../controller/employeeController');
-const { working_hours } = require('../controller/employeeController');
+const employeeController = require('../controller/attendanceController');
+const { working_hours } = require('../controller/attendanceController');
 
 userRouter.post('/',employeeController._post);
 userRouter.get('/',employeeController._get);
