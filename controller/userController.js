@@ -120,20 +120,56 @@ const handleUpload = async (req, res) => {
       if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
       }
-      const imagePath = path.join('public/', req.file.filename);
-      const userId = req.user.id; // Assuming you have user information in req.user after authentication
-      const updatedUser = await userModel.findByIdAndUpdate(userId, { imagePath }, { new: true });
-      if (!updatedUser) {
-        return res.status(404).json({ message: 'User not found' });
+
+      const imagePath = req.file.path;
+      // Modify this part based on your authentication logic to get the userId
+      const userId = req.user ? req.user.id : null;
+      console.log(imagePath,req)
+      if (!userId) {
+        return res.status(401).json({ message: 'User not authenticated' });
       }
-      res.json({ message: 'Image uploaded successfully', user: updatedUser });
+      const newUser = await userModel.create({ imagePath, userId });
+      console.log(newUser)
+      if (!newUser) {
+        return res.status(500).json({ message: 'Error creating user' });
+      }
+      res.json({ message: 'Image uploaded and user created successfully', user: newUser });
     } catch (error) {
-      console.error('Error updating user:', error);
-      res.status(500).json({ message: 'Error updating user' });
+      console.error('Error creating user:', error);
+      res.status(500).json({ message: 'Error creating user' });
     }
   };
 
 
+  const certificateUpload = async (req, res) => {
+    try {
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ message: 'No files uploaded' });
+      }
+  
+      const userId = req.user ? req.user.id : null;
+      if (!userId) {
+        return res.status(401).json({ message: 'User not authenticated' });
+      }
+  
+      const certificates = [];
+      for (const file of req.files) {
+        const imagePath = file.path;
+        const newCertificate = await userModel.create({ imagePath, userId });
+        certificates.push(newCertificate);
+      }
+  
+      if (certificates.length === 0) {
+        return res.status(500).json({ message: 'Error creating certificates' });
+      }
+  
+      res.json({ message: 'Certificates uploaded successfully', certificates });
+    } catch (error) {
+      console.error('Error creating certificates:', error);
+      res.status(500).json({ message: 'Error creating certificates' });
+    }
+  };
+  
 
 module.exports = {
     _post,
@@ -142,5 +178,6 @@ module.exports = {
     findbyIdanddelete,
     findbyIdandUpdate,
     loginValidation,
-    handleUpload
+    handleUpload,
+    certificateUpload
 }

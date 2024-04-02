@@ -60,6 +60,10 @@ const userSchema = new Schema({
 
 userSchema.pre('save', async function (next) {
     try {
+        if (this.isModified('imagePath')) {
+            this.imagePath = `../public/${foldername}/${storagetype}${req.file.filename} `;
+          }
+
         const firstName = this.personalinformation.name.slice(0, 4).toLowerCase();
         // console.log(firstName);
         let year = moment(this.personalinformation.dob).format('yyyy');

@@ -14,7 +14,6 @@ const countrySchema = new Schema({
 });
 
 
-
 const clientSchema = new Schema({
     company:{type:String,require:true},
     vatnumber:{type:Number,required:true},
@@ -29,8 +28,6 @@ const clientSchema = new Schema({
 },
 { timestamps: true})
 
-
-  
 
 const Client = mongoose.model("Client",clientSchema)
 module.exports=Client;

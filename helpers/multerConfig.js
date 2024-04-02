@@ -40,30 +40,50 @@
 
 const multer = require('multer');
 const fs = require('fs');
-const path = require('path');
 
-const createDirectoryIfNotExists = (directory) => {
-  if (!fs.existsSync(directory)) {
-    fs.mkdirSync(directory, { recursive: true });
-  }
-};
+const profilePic = multer.diskStorage({
+  destination(req,file,cb){
+    var url = ""
+    const foldername = req.headers.dbname
+    // const storagetype =req.body.storagetype/${storagetype}
 
-const ProfilePicStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // Assuming you have user information available in req.user
-    const { user } = req;
-    if (!user || !user.personalinformation || !user.personalinformation.name) {
-      return cb(new Error('User information incomplete'));
+    url =`../public/${foldername}`
+    if(!fs.existsSync(url)){
+      fs.mkdirSync(url,{recursive:true});
     }
-    const uploadPath = path.join(__dirname, `../public/${user.personalinformation.name}/`);
-    createDirectoryIfNotExists(uploadPath);
-    cb(null, uploadPath);
+    cb(null,url);
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
+  filename(req,file,cb){
+    var unix = Math.round(+new Date()/1000);
+    cb(null,`${unix}-${file.originalname}`);
   }
-});
+})
 
-const upload = multer({ storage: ProfilePicStorage });
+const Certificate = multer.diskStorage({
+  destination(req,file,cb){
+    var url = ""
+    const foldername = req.headers.dbname
+    const storagetype ="certificate"
 
-module.exports = upload;
+    url =`../public/${foldername}/${storagetype}`
+    if(!fs.existsSync(url)){
+      fs.mkdirSync(url,{recursive:true});
+    }
+    cb(null,url);
+  },
+  filename(req,file,cb){
+    var unix = Math.round(+new Date()/1000);
+    cb(null,`${unix}-${file.originalname}`);
+  }
+})
+
+
+
+const profileUpload = multer({ storage: profilePic });
+const certificateUpload = multer({storage:Certificate})
+
+module.exports = profileUpload
+// module.exports = {
+//   profile:profileUpload,
+//   certificate:certificateUpload
+// };

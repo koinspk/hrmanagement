@@ -5,7 +5,7 @@ const sendCountryCode = (req, res) => {
   try {
     // path.join
     const filePath = path.join(__dirname, '..', 'controller', 'countrycode', 'CountryCode.json');
-    console.log(filePath)
+    // console.log(filePath)
     if (!fs.existsSync(filePath)) {
       throw new Error('countryCode.json not found');
     }
