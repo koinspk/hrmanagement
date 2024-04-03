@@ -1,10 +1,10 @@
-const employeeModel = require('../model/attendanceModel');
+const attendanceModel = require('../model/attendanceModel');
 const moment = require('moment');
 
 const _post = async(req,res) => {
     const record = req.body;
     try {
-        let response = await employeeModel.create(record);
+        let response = await attendanceModel.create(record);
         return res.status(201).send(response);
     } catch (error) {
         console.log(error);
@@ -15,7 +15,7 @@ const _post = async(req,res) => {
 
 const _get = async(req,res) => {
     try {
-        let response = await employeeModel.find();
+        let response = await attendanceModel.find();
         return res.status(201).send(response);
     } catch (error) {
         return res.status(403).send(error);
@@ -27,7 +27,7 @@ const _get = async(req,res) => {
 const findbyId = async(req,res) => {
     try {
         const { id } = req.params;
-        let response = await employeeModel.findById(id);
+        let response = await attendanceModel.findById(id);
         return res.status(201).send(response);
     } catch (error) {
         return res.status(403).send(error)
@@ -38,7 +38,7 @@ const findbyId = async(req,res) => {
 const findbyIdanddelete = async(req,res) => {
     try {
         const { id } = req.params;
-        let response = await employeeModel.findByIdAndDelete(id);
+        let response = await attendanceModel.findByIdAndDelete(id);
         return res.status(201).send(response);
     } catch (error) {
         return res.status(403).send(error)
@@ -50,7 +50,7 @@ const findbyIdandUpdate = async(req,res) => {
     try {
         const { id } = req.params;
         const { type, checkin, checkout, breaktime  } = req.body;
-        const employee = await employeeModel.findById(id);
+        const employee = await attendanceModel.findById(id);
         switch (type) {
             case 'checkin':
                 if (!checkin && req.body.hasOwnProperty('checkin')) {     //hasOwnProperty used to check if an object has a specific property
