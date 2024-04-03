@@ -18,7 +18,7 @@ function verifyToken(req, res, next) {
   
   //verifyaccessToken
   const verifyAccessToken = (req, res, next) => {
-    const accessToken = req.headers.authorization; // Assuming token is sent in the Authorization header
+    const accessToken = req.headers.authorization; 
   
     if (!accessToken) {
       return res.status(401).json({ message: 'Access token not provided' });
@@ -27,7 +27,7 @@ function verifyToken(req, res, next) {
     try {
       const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
       req.user = decoded; // Attach user information to the request object
-      next(); // Proceed to the next middleware or route handler
+      next(); 
     } catch (err) {
       return res.status(403).json({ message: 'Invalid access token' });
     }
@@ -46,7 +46,7 @@ const verifyRefreshToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     req.user = decoded; // Attach user information to the request object
-    next(); // Proceed to the next middleware or route handler
+    next(); 
   } catch (err) {
     return res.status(403).json({ message: 'Invalid refresh token' });
   }

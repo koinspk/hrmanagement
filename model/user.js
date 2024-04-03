@@ -27,8 +27,7 @@ const employementDetails = new Schema({
     jobtitle:{type:String,required:true},
     manager:{type:String},
     startdate:{type:Date,required:true},
-    skills:{type:[String],required:true},
-    role:{type:String,required:true}
+    skills:{type:[String],required:true}
 });
 
 //compensation
@@ -61,6 +60,10 @@ const userSchema = new Schema({
 
 userSchema.pre('save', async function (next) {
     try {
+        if (this.isModified('imagePath')) {
+            this.imagePath = `../public/${foldername}/${storagetype}${req.file.filename} `;
+          }
+
         const firstName = this.personalinformation.name.slice(0, 4).toLowerCase();
         // console.log(firstName);
         let year = moment(this.personalinformation.dob).format('yyyy');

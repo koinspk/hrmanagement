@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const { log } = require('console');
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const aqp = require('api-query-params');
 
 require('dotenv').config();
 
@@ -17,23 +18,22 @@ const _post = async(req,res) =>{
         return res.status(403).send(error)
     }
 }
-
-
-const _get = async(req,res) => {
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = parseInt(req.query.skip) || 0;
+const _get = async (req, res) => {
     try {
-        let response = await userModel.find().limit(limit).skip(skip);
-        const totalCount = await userModel.find().countDocuments();
-        return res.status(201).send({response,totalCount});
-
+      const { filter, limit, skip } = aqp(req.query);
+  
+      let query = userModel.find(filter).limit(limit).skip(skip);
+      let response = await query.exec();
+  
+      const totalCount = await userModel.countDocuments(filter);
+  
+      return res.status(200).send({ response, totalCount });
     } catch (error) {
-        return res.status(403).send(error)
+      console.error('Error retrieving data:', error);
+      return res.status(500).send({ message: 'Internal server error' });
     }
-    
-}
+};
 
- 
 
 const findbyId = async(req,res) => {
     try {
@@ -86,7 +86,7 @@ try{
     const accessToken = jwt.sign({userId: user._id},process.env.ACCESS_TOKEN_SECRET,{expiresIn:process.env.ACCESS_TOKEN_EXP});
     //refresh token
     const refreshToken = jwt.sign({userId: user._id}, process.env.REFRESH_TOKEN_SECRET,{expiresIn:process.env.REFRESH_TOKEN_EXP})
-    return res.status(200).json({accessToken,refreshToken});
+    return res.status(200).json({accessToken});
 }
 catch(err){
     console.log(`Login Error:${err}`);
@@ -95,29 +95,82 @@ catch(err){
 }
 
 //image upload
+// const handleUpload = async (req, res) => {
+//     try {
+//         const userId = req.params.id; 
+//         const user = await userModel.findById(userId);
+//       if (!req.file) {
+//         return res.status(400).json({ message: 'No file uploaded' });
+//       }
+//       const imagePath = path.join(`public/${user.personalinformation.name}/`, req.file.filename); // Construct the image path
+//       const updatedUser = await userModel.findByIdAndUpdate(user, { imagePath: imagePath }, { new: true });
+//       if (!updatedUser) {
+//         return res.status(404).json({ message: 'User not found' });
+//       }
+//       res.json({ message: 'Image uploaded successfully', user: updatedUser });
+//     } catch (error) {
+//       log(req)
+//       console.error('Error updating user:', error);
+//       res.status(500).json({ message: 'Error updating user'});
+//     }
+//   };
+  
 const handleUpload = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const imagePath = req.file.path;
+    // Modify this part based on your authentication logic to get the userId
+    const userId = req.user ? req.user.id : null;
+      console.log(req)
+    if (!userId) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+    const newUser = await userModel.create({ imagePath, userId });
+
+    if (!newUser) {
+      return res.status(500).json({ message: 'Error creating user' });
+    }
+    res.json({ message: 'Image uploaded and user created successfully', user: newUser });
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'Error creating user' });
+  }
+};
+
+
+
+  const certificateUpload = async (req, res) => {
     try {
-        const userId = req.params.id; 
-        const user = await userModel.findById(userId);
-      if (!req.file) {
-        return res.status(400).json({ message: 'No file uploaded' });
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ message: 'No files uploaded' });
       }
-      const imagePath = path.join(`public/${user.personalinformation.name}/`, req.file.filename); // Construct the image path
-      const updatedUser = await userModel.findByIdAndUpdate(user, { imagePath: imagePath }, { new: true });
-      if (!updatedUser) {
-        return res.status(404).json({ message: 'User not found' });
+  
+      const userId = req.user ? req.user.id : null;
+      if (!userId) {
+        return res.status(401).json({ message: 'User not authenticated' });
       }
-      res.json({ message: 'Image uploaded successfully', user: updatedUser });
+  
+      const certificates = [];
+      for (const file of req.files) {
+        const imagePath = file.path;
+        const newCertificate = await userModel.create({ imagePath, userId });
+        certificates.push(newCertificate);
+      }
+  
+      if (certificates.length === 0) {
+        return res.status(500).json({ message: 'Error creating certificates' });
+      }
+  
+      res.json({ message: 'Certificates uploaded successfully', certificates });
     } catch (error) {
-      log(req)
-      console.error('Error updating user:', error);
-      res.status(500).json({ message: 'Error updating user'});
+      console.error('Error creating certificates:', error);
+      res.status(500).json({ message: 'Error creating certificates' });
     }
   };
   
-
-
-
 
 module.exports = {
     _post,
@@ -126,5 +179,6 @@ module.exports = {
     findbyIdanddelete,
     findbyIdandUpdate,
     loginValidation,
-    handleUpload
+    handleUpload,
+    certificateUpload
 }
