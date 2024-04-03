@@ -16,7 +16,8 @@ const _post = async(req,res) => {
 const _get = async(req,res) => {
     try {
         let response = await rolegroupModel.find();
-        return res.status(201).send(response);
+        let totalcount = await rolegroupModel.countDocuments()
+        return res.status(201).send({response,totalcount});
     } catch (error) {
         return res.status(403).send(error)
     }
