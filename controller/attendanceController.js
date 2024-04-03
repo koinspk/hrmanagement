@@ -1,4 +1,5 @@
 const employeeModel = require('../model/attendanceModel');
+const moment = require('moment');
 
 const _post = async(req,res) => {
     const record = req.body;
@@ -54,7 +55,7 @@ const findbyIdandUpdate = async(req,res) => {
             case 'checkin':
                 if (!checkin && req.body.hasOwnProperty('checkin')) {     //hasOwnProperty used to check if an object has a specific property
                     employee.checkin = new Date(checkin);
-                    employee.save();
+                    await employee.save();
                 }
                 break;
 
@@ -79,37 +80,37 @@ const findbyIdandUpdate = async(req,res) => {
 };
 
 
-// const pause = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         employee.paused = true; 
-//         await employee.save();
-
-//         return res.status(200).json({ message: 'Employee shift paused successfully', employee });
-//     } catch (error) {
-    
-//         return res.status(500).json({ error: 'Internal server error' });
-//     }
-// };
-
 const working_hours = async (req, res) => {
     try {
-        const { checkin, checkout, breaktime } = req.body;
+        const { checkin, checkout, breaktime,employeeid } = req.body;
         if (!checkin || !checkout) {
             return res.status(400).json({ error: 'checkin and checkout dates are required' });
         }
 
         const checkinTime = moment(checkin);
         const checkoutTime = moment(checkout);
-        const breakTime = breaktime ? moment.duration(breaktime).asHours() : 0;
-        const diffHours = checkoutTime.diff(checkinTime, 'hours');
-        const workingHours = diffHours - breakTime;
 
-        if (workingHours < 0) {
-            return res.status(400).json({ error: 'Invalid working hours' });
+        let breakTimeDifferences = [];
+        if (Array.isArray(breaktime) && breaktime.length >= 2) {
+            for (let i = 0; i < breaktime.length - 1; i += 2) {
+                const breakStart = moment(breaktime[i], 'HH:mm:ss');
+                const breakEnd = moment(breaktime[i + 1], 'HH:mm:ss');
+                const breakDuration = breakEnd.diff(breakStart, 'hours', true);
+                breakTimeDifferences.push(breakDuration);
+            }
         }
 
-        res.status(200).json({ message: 'Request received successfully', workingHours });
+        const totalBreakTime = breakTimeDifferences.reduce((total, duration) => total + duration, 0);
+        const breakTimeHours = totalBreakTime;
+        console.log(checkinTime.format('YYYY HH:mm:ss'))
+        // const breakTimeHours  = breaktime ? moment.duration(breaktime).asHours() : 0;
+        const diffHours = checkoutTime.diff(checkinTime, 'hours') - breakTimeHours;
+        if (diffHours < 0) {
+            return res.status(400).json({ error: 'Invalid working hours' });
+        }
+        
+        res.status(200).json({  employeeid:employeeid,checkin:checkin,checkout:checkout,breaktime:breaktime, workinghours:diffHours}); 
+
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Internal server error' });
