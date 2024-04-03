@@ -116,29 +116,30 @@ catch(err){
 //   };
   
 const handleUpload = async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ message: 'No file uploaded' });
-      }
-
-      const imagePath = req.file.path;
-      // Modify this part based on your authentication logic to get the userId
-      const userId = req.user ? req.user.id : null;
-      console.log(imagePath,req)
-      if (!userId) {
-        return res.status(401).json({ message: 'User not authenticated' });
-      }
-      const newUser = await userModel.create({ imagePath, userId });
-      console.log(newUser)
-      if (!newUser) {
-        return res.status(500).json({ message: 'Error creating user' });
-      }
-      res.json({ message: 'Image uploaded and user created successfully', user: newUser });
-    } catch (error) {
-      console.error('Error creating user:', error);
-      res.status(500).json({ message: 'Error creating user' });
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
     }
-  };
+
+    const imagePath = req.file.path;
+    // Modify this part based on your authentication logic to get the userId
+    const userId = req.user ? req.user.id : null;
+      console.log(req)
+    if (!userId) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+    const newUser = await userModel.create({ imagePath, userId });
+
+    if (!newUser) {
+      return res.status(500).json({ message: 'Error creating user' });
+    }
+    res.json({ message: 'Image uploaded and user created successfully', user: newUser });
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'Error creating user' });
+  }
+};
+
 
 
   const certificateUpload = async (req, res) => {
