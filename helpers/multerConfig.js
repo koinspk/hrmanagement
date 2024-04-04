@@ -1,12 +1,15 @@
 const multer = require('multer');
 const fs = require('fs');
+const express =require('express')
+const app = express();
+
+// Body parsing middleware for parsing form data
 
 const profilePic = multer.diskStorage({
   destination(req,file,cb){
     var url = ""
-    // const foldername = req.headers.dbname || "Photo";
-    const foldername = req.body.name || "Photo";
-    console.log(req.body)
+     const foldername = req.body.name|| "Photo";
+    //  console.log(req.body)
     // const storagetype =req.body.storagetype/${storagetype}
     url =`./public/${foldername}`
     if(!fs.existsSync(url)){

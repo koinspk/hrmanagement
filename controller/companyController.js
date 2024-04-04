@@ -67,9 +67,10 @@ const logoUpload = async (req, res) => {
         endtime: req.body.endtime,
         startofweek: req.body.startofweek,
         endofweek: req.body.endofweek,
-        logo: req.file.path 
+        logo: req?.files[0] ?.path?? ''
+        //  logo: req.files.path[0]
       };
-      console.log(req.body.name)
+      console.log(req.files)
       const newCompany = await new companyModel(companyData);
       await newCompany.save();
   
