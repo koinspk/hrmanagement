@@ -3,14 +3,14 @@ const {Schema} =  mongoose;
 
 
 const companySchema = new Schema({
-    name:{type:String},
-    location:{type:String},
-    weblink:{type:String},
-    starttime:{type:Date},
-    endtime:{type:Date},
-    startofweek:{type:String},
-    endofweek:{type:String},
-    logo:{type:String}
+    name:{type:String ,required:true},
+    location:{type:String ,required:true},
+    website:{type:String ,required:true},
+    CompanyStarttime:{type:Date ,required:true},
+    Endtime:{type:Date ,required:true},
+    StartofWeek:{type:String,required:true},
+    EndofWeek:{type:String,required:true},
+    profile:{type:String}
 })
 
 

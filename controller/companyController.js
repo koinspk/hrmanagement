@@ -15,6 +15,7 @@ const _post = async(req,res) => {
 
 const _get = async(req,res) => {
     try {
+        
         let response = await companyModel.find();
         let totalcount = await companyModel.countDocuments()
         return res.status(201).send({response,totalcount});
@@ -62,15 +63,15 @@ const logoUpload = async (req, res) => {
       const companyData = {
         name: req.body.name,
         location: req.body.location,
-        weblink: req.body.weblink,
-        starttime: req.body.starttime,
-        endtime: req.body.endtime,
-        startofweek: req.body.startofweek,
-        endofweek: req.body.endofweek,
-        logo: req?.files[0] ?.path?? ''
-        //  logo: req.files.path[0]
+        website: req.body.website,
+        CompanyStarttime: req.body.CompanyStarttime,
+        Endtime: req.body.Endtime,
+        StartofWeek: req.body.StartofWeek,
+        EndofWeek: req.body.EndofWeek,
+        profile: req?.files[0] ?.path?? ''
       };
-      console.log(req.files)
+    //   console.log(req.files)
+    //   console.log(req)
       const newCompany = await new companyModel(companyData);
       await newCompany.save();
   
