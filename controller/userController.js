@@ -57,15 +57,66 @@ const findbyIdanddelete = async(req,res) => {
 }
 
 
-const findbyIdandUpdate = async(req,res) => {
-    try {
-        const { id } = req.params;
-        let response = await userModel.findByIdAndUpdate(id,req.body);
-        return res.status(201).send(response);
-    } catch (error) {
-        return res.status(403).send(error)
-}
-}
+// const findbyIdandUpdate = async(req,res) => {
+//     try {
+//         const { id } = req.params;
+//         let response = await userModel.findByIdAndUpdate(id,req.body);
+//         return res.status(201).send(response);
+//     } catch (error) {
+//         return res.status(403).send(error)
+// }
+// }
+
+
+const findbyIdandUpdate = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const formData = req.body;
+
+      // Extract certificates array from files
+      const certificates = req.files.map(file => file.path);
+
+      const user = {
+          personalinformation: {
+              name: formData['personalinformation.name'],
+              employeeid: formData['personalinformation.employeeid'],
+              maritalstatus: formData['personalinformation.maritalstatus'],
+              dob: formData['personalinformation.dob'],
+              gender: formData['personalinformation.gender'],
+              nationality: formData['personalinformation.nationality'],
+              password: formData['personalinformation.password']
+          },
+          contactinformation: {
+              emailaddress: formData['contactinformation.emailaddress'],
+              phonenumber: formData['contactinformation.phonenumber'],
+              address: formData['contactinformation.address']
+          },
+          employmentdetails: {
+              department: formData['employmentdetails.department'],
+              jobtitle: formData['employmentdetails.jobtitle'],
+              manager: formData['employmentdetails.manager'],
+              startdate: formData['employmentdetails.startdate'],
+              skills: formData['employmentdetails.skills'].split(',') // Assuming skills are comma-separated
+          },
+          compensation: {
+              salary: formData['compensation.salary'],
+              benefits: formData['compensation.benefits'],
+              bankaccount: formData['compensation.bankaccount']
+          },
+          emergencycontacts: {
+              emergencycontactname: formData['emergencycontacts.emergencycontactname'],
+              emergencycontactnumber: formData['emergencycontacts.emergencycontactnumber']
+          },
+          imagePath: req.files[0] ? req.files[0].path : '',
+          certificates: certificates
+      };
+
+      const response = await User.findByIdAndUpdate(id, user, { new: true });
+      return res.status(201).send(response);
+  } catch (error) {
+      return res.status(403).send(error);
+  }
+};
 
 //login Autebtication
 const loginValidation = async (req,res)=>{
@@ -94,82 +145,64 @@ catch(err){
 }
 }
 
-//image upload
-// const handleUpload = async (req, res) => {
-//     try {
-//         const userId = req.params.id; 
-//         const user = await userModel.findById(userId);
-//       if (!req.file) {
-//         return res.status(400).json({ message: 'No file uploaded' });
-//       }
-//       const imagePath = path.join(`public/${user.personalinformation.name}/`, req.file.filename); // Construct the image path
-//       const updatedUser = await userModel.findByIdAndUpdate(user, { imagePath: imagePath }, { new: true });
-//       if (!updatedUser) {
-//         return res.status(404).json({ message: 'User not found' });
-//       }
-//       res.json({ message: 'Image uploaded successfully', user: updatedUser });
-//     } catch (error) {
-//       log(req)
-//       console.error('Error updating user:', error);
-//       res.status(500).json({ message: 'Error updating user'});
-//     }
-//   };
-  
+//upload
 const handleUpload = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+    let arr=[]
+    let maps =req.files.map((val)=> {
+      if(val.fieldname=="certificates"){
+         arr.push(val.path)
+      }
+      
+    })
+    // console.log(arr)
+    const formData = req.body;
+    const user ={
+      personalinformation: {
+        name: formData['personalinformation.name'],
+        employeeid: formData['personalinformation.employeeid'],
+        maritalstatus: formData['personalinformation.maritalstatus'],
+        dob: formData['personalinformation.dob'],
+        gender: formData['personalinformation.gender'],
+        nationality: formData['personalinformation.nationality'],
+        password: formData['personalinformation.password']
+      },
+      contactinformation: {
+        emailaddress: formData['contactinformation.emailaddress'],
+        phonenumber: formData['contactinformation.phonenumber'],
+        address: formData['contactinformation.address']
+      },
+      employmentdetails: {
+        department: formData['employmentdetails.department'],
+        jobtitle: formData['employmentdetails.jobtitle'],
+        manager: formData['employmentdetails.manager'],
+        startdate: formData['employmentdetails.startdate'],
+        skills: formData['employmentdetails.skills'].split(',') // Assuming skills are comma-separated
+      },
+      compensation: {
+        salary: formData['compensation.salary'],
+        benefits: formData['compensation.benefits'],
+        bankaccount: formData['compensation.bankaccount']
+      },
+      emergencycontacts: {
+        emergencycontactname: formData['emergencycontacts.emergencycontactname'],
+        emergencycontactnumber: formData['emergencycontacts.emergencycontactnumber']
+      },
+      imagePath: req?.files[0] ?.path?? '',
+      certificates:arr
     }
+    // Create a new user instance with FormData
+    const newUser = await new userModel(user);
 
-    const imagePath = req.file.path;
-    // Modify this part based on your authentication logic to get the userId
-    const userId = req.user ? req.user.id : null;
-      console.log(req)
-    if (!userId) {
-      return res.status(401).json({ message: 'User not authenticated' });
-    }
-    const newUser = await userModel.create({ imagePath, userId });
-
-    if (!newUser) {
-      return res.status(500).json({ message: 'Error creating user' });
-    }
-    res.json({ message: 'Image uploaded and user created successfully', user: newUser });
+    // Save the user data to MongoDB
+    await newUser.save();
+    res.status(201).send('User data saved successfully');
   } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Error creating user' });
+    console.error('Error saving user data:', error);
+    res.status(500).send('Internal Server Error');
   }
-};
+}
 
-
-
-  const certificateUpload = async (req, res) => {
-    try {
-      if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ message: 'No files uploaded' });
-      }
-  
-      const userId = req.user ? req.user.id : null;
-      if (!userId) {
-        return res.status(401).json({ message: 'User not authenticated' });
-      }
-  
-      const certificates = [];
-      for (const file of req.files) {
-        const imagePath = file.path;
-        const newCertificate = await userModel.create({ imagePath, userId });
-        certificates.push(newCertificate);
-      }
-  
-      if (certificates.length === 0) {
-        return res.status(500).json({ message: 'Error creating certificates' });
-      }
-  
-      res.json({ message: 'Certificates uploaded successfully', certificates });
-    } catch (error) {
-      console.error('Error creating certificates:', error);
-      res.status(500).json({ message: 'Error creating certificates' });
-    }
-  };
   
 
 module.exports = {
@@ -180,5 +213,4 @@ module.exports = {
     findbyIdandUpdate,
     loginValidation,
     handleUpload,
-    certificateUpload
 }
