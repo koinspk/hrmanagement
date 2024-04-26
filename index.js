@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 // const user = require('./model/user');
 var cors = require('cors');
 const cookieParser = require('cookie-parser');
-
+   
 app.use((req,res,next)=>{
     console.log(req.path + ' ' +req.method)
     next()
