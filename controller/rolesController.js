@@ -1,4 +1,5 @@
 const rolegroupModel = require('../model/role');
+const aqp = require('api-query-params');
 
 const _post = async(req,res) => {
     const record = req.body;
@@ -15,7 +16,8 @@ const _post = async(req,res) => {
 
 const _get = async(req,res) => {
     try {
-        let response = await rolegroupModel.find();
+        const { limit, skip } = aqp(req.query);
+        let response = await rolegroupModel.find().limit(limit).skip(skip);;
         let totalcount = await rolegroupModel.countDocuments()
         return res.status(201).send({response,totalcount});
     } catch (error) {

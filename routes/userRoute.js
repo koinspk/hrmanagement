@@ -5,7 +5,7 @@ const userController = require('../controller/userController');
 const upload = require('../helpers/multerConfig')
 
 //set Route
-userRouter.post('/',userController._post);
+userRouter.post('/',upload.any(), userController.handleUpload);
 userRouter.get('/',userController._get);
 userRouter.get('/:id',userController.findbyId);
 userRouter.delete('/:id',userController.findbyIdanddelete);

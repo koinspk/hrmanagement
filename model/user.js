@@ -5,57 +5,58 @@ const bycrpt = require("bcrypt");
 const moment = require("moment");
 //personalInfor
 const personalInformation = new Schema({
-    name : { type : String , required : true  },
-    employeeid : { type : Number , required : true },
-    nationality:{ type:String },
-    maritalstatus:{type : String , enum : [ 'Married' , 'Unmarried' ] , required : true },
-    gender : { type : String , enum : [ 'Male' , 'Female' , 'Others' ] },
-    dob:{type:Date,required:true},
-    password : String
+    name: { type: String, required: true },
+    employeeid: { type: Number, required: true },
+    nationality: { type: String },
+    maritalstatus: { type: String, enum: ['Married', 'Unmarried'], required: true },
+    gender: { type: String, enum: ['Male', 'Female', 'Others'] },
+    dob: { type: Date, required: true },
+    password: String
 });
 
 //contactInfor
 const contactInformation = new Schema({
-    emailaddress:{type:String , required:true},
-    phonenumber:{type:Number,required:true},
-    address:{type:String , required:true}
+    emailaddress: { type: String, required: true },
+    phonenumber: { type: Number, required: true },
+    address: { type: String, required: true }
 });
 
 //Employeedetails
 const employementDetails = new Schema({
-    department:{type:String},
-    jobtitle:{type:String,required:true},
-    manager:{type:String},
-    startdate:{type:Date,required:true},
-    skills:{type:[String],required:true}
+    department: { type: String },
+    jobtitle: { type: String, required: true },
+    manager: { type: String },
+    startdate: { type: Date, required: true },
+    skills: { type: [String], required: true },
+    role: { type: String, required: true },
 });
 
 //compensation
-const compensationAndBenefits=new Schema({
-    salary:{type:Number },
-    benefits:{type:String },
-    bankaccount:{type:Number,required:true}
+const compensationAndBenefits = new Schema({
+    salary: { type: Number },
+    benefits: { type: String },
+    bankaccount: { type: Number, required: true }
 });
 
 //emergencyNum 
-const EmergencyContact=new Schema({
-    emergencycontactname:{type:String,required:true},
-    emergencycontactnumber:{type:Number,required:true}
+const EmergencyContact = new Schema({
+    emergencycontactname: { type: String, required: true },
+    emergencycontactnumber: { type: Number, required: true }
 
 });
 
 
 //UserSchema
 const userSchema = new Schema({
-    personalinformation : personalInformation,
-    contactinformation:contactInformation,
-    employmentdetails :employementDetails,
-    compensation:compensationAndBenefits,
-    emergencycontacts:EmergencyContact,
-    imagePath:String,
-    certificates:[String]
+    personalinformation: personalInformation,
+    contactinformation: contactInformation,
+    employmentdetails: employementDetails,
+    compensation: compensationAndBenefits,
+    emergencycontacts: EmergencyContact,
+    profile: String,
+    documents: [String]
 },
-{ timestamps: true},
+    { timestamps: true },
 );
 
 
@@ -68,7 +69,7 @@ userSchema.pre('save', async function (next) {
         const firstName = this.personalinformation.name.slice(0, 4).toLowerCase();
         // console.log(firstName);
         let year = moment(this.personalinformation.dob).format('yyyy');
-        const hashedPassword = await bycrpt.hash(firstName+year, 10);
+        const hashedPassword = await bycrpt.hash(firstName + year, 10);
         this.personalinformation.password = hashedPassword; // Save hashed password to the nested field
         next();
     } catch (err) {
