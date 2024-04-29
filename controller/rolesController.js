@@ -17,7 +17,7 @@ const _post = async(req,res) => {
 const _get = async(req,res) => {
     try {
         const { limit, skip } = aqp(req.query);
-        let response = await rolegroupModel.find().limit(limit).skip(skip);;
+        let response = await rolegroupModel.find().limit(limit).skip(skip);
         let totalcount = await rolegroupModel.countDocuments()
         return res.status(201).send({response,totalcount});
     } catch (error) {
