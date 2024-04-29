@@ -22,7 +22,5 @@ userRouter.post('/uploadprofile',upload.any(),userController.handleUpload);
 // userRouter.post('/uploadcertificate',upload.certificate.array('certificateFiles', 5),userController.certificateUpload);
 
 
-
-
 module.exports = userRouter;
 
