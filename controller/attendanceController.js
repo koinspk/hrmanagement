@@ -117,23 +117,6 @@ const working_hours = async (req, res) => {
     }
 };
 
-// const working_hours = async (req, res) => {
-//     try {
-//         const { checkin, checkout, breaktime } = req.body;
-
-//         // Calculate total working hours using the virtual property
-//         const attendance = new attendanceModel({ checkin, checkout, breaktime });
-//         const totalWorkingHours = attendance.WorkingHours;
-
-//         // Create a new attendance record with the computed total working hours
-//         const newRecord = await attendanceModel.create({ checkin, checkout, breaktime, totalWorkingHours });
-
-//         return res.status(201).json(newRecord);
-//     } catch (error) {
-//         console.error('Error:', error);
-//         return res.status(500).json({ error: 'Internal server error' });
-//     }
-// };
 
 module.exports = {
     _post,

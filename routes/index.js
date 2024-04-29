@@ -5,7 +5,7 @@ const userRoute = require('./userRoute');
 const usergroupRoute = require('./usergroupRoute');
 const clientRoute = require("./clientRoute");
 const attendanceRoute = require('./attendanceRoute');
-
+const approvalRoute = require('./approvalRoute');
 const countryCode = require("./countryCode");
 const roleRoute = require('./roleRoute');
 const companyRoute = require('./companyRoute');
@@ -18,6 +18,7 @@ router.use('/attendance',attendanceRoute);
 router.use('/countrycode',countryCode);
 router.use('/role',roleRoute);
 router.use('/company',companyRoute);
+router.use('/approval',approvalRoute);
 
 
 module.exports = router;
