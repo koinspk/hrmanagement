@@ -3,7 +3,7 @@ const userRouter = express.Router();
 
 const approvalController = require('../controller/approvalController');
 
-userRouter.post('/',approvalController._post);
+userRouter.post('/',approvalController.leaveRequest);
 userRouter.get('/',approvalController._get);
 userRouter.get('/:id',approvalController.findbyId);
 userRouter.delete('/:id',approvalController.findbyIdanddelete);
