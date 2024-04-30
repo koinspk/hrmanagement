@@ -18,7 +18,7 @@ const _get = async(req,res) => {
     try {
         // let response = await approvalModel.find().populate('group');
         const { filter, skip, limit, sort, projection, population } = aqp(req.query);
-        let response =   approvalModel.find(filter)
+        let response =  await approvalModel.find(filter)
         .skip(skip)
         .limit(limit)
         .sort(sort)
@@ -26,7 +26,9 @@ const _get = async(req,res) => {
         .populate(population);
         let totalcount = await approvalModel.countDocuments(filter);
         return res.status(201).send({response,totalcount});
+
     } catch (error) {
+        console.log(error);
         return res.status(403).send(error)
     }
     

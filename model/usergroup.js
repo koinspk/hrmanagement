@@ -4,9 +4,11 @@ const { Schema } = mongoose;
 
 const usergroupSchema = new Schema({
     name : String,
-    description : String
+    description : String,
 });
 
-let usergroupCompile = mongoose.model('Usergroup', usergroupSchema);
+
+
+let usergroupCompile = mongoose.model('group', usergroupSchema);
 
 module.exports = usergroupCompile;
