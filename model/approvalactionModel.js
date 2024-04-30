@@ -15,6 +15,6 @@ const approvalSchema = new Schema({
     }]
 });
 
-let approval = mongoose.model('approval', approvalSchema);
+let approval = mongoose.model('approvalaction', approvalSchema);
 
 module.exports = approval;

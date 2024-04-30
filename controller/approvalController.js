@@ -15,8 +15,8 @@ const _post = async(req,res) => {
 const _get = async(req,res) => {
     try {
         let response = await approvalModel.find();
-        let totalcount = await clientModel.countDocuments()
-        return res.status(201).send({response,totalcount});
+        // let totalcount = await clientModel.countDocuments()
+        return res.status(201).send({response});
     } catch (error) {
         return res.status(403).send(error)
     }
