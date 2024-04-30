@@ -1,5 +1,6 @@
 const approvalModel = require('../model/approvalModel');
 const approvalactionModel = require('../model/approvalactionModel')
+const aqp = require('api-query-params');
 
 const _post = async(req,res) => {
     const record = req.body;
@@ -14,8 +15,15 @@ const _post = async(req,res) => {
 
 const _get = async(req,res) => {
     try {
-        let response = await approvalModel.find().populate('group');
-        let totalcount = await approvalModel.countDocuments()
+        // let response = await approvalModel.find().populate('group');
+        const { filter, skip, limit, sort, projection, population } = aqp(req.query);
+        let response =   rolegroupModel.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .sort(sort)
+        .select(projection)
+        .populate(population);
+        let totalcount = await approvalModel.countDocuments(filter);
         return res.status(201).send({response,totalcount});
     } catch (error) {
         return res.status(403).send(error)
@@ -27,7 +35,7 @@ const leaveRequest = async (req, res) => {
     try {
         
         const { groupid } = req.params;
-        console.log(groupid)
+        // console.log(groupid)
         const records = await approvalModel.findOne({ 'group': groupid });
         await approvalactionModel.create(records);
         console.log(records);
