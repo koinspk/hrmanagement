@@ -18,7 +18,7 @@ const _get = async(req,res) => {
     try {
         // let response = await approvalModel.find().populate('group');
         const { filter, skip, limit, sort, projection, population } = aqp(req.query);
-        let response =   rolegroupModel.find(filter)
+        let response =   approvalModel.find(filter)
         .skip(skip)
         .limit(limit)
         .sort(sort)
