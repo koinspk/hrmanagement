@@ -16,6 +16,7 @@ const _post = async(req,res) => {
 const _get = async(req,res) => {
     try {
         let response = await approvalModel.find().populate('group');
+        let totalcount = await approvalModel.countDocuments()
         return res.status(201).send({response,totalcount});
     } catch (error) {
         return res.status(403).send(error)
