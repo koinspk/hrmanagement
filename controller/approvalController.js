@@ -51,33 +51,6 @@ const leaveRequest = async (req, res) => {
 };
 
 
-// const leaveRequest = async (req, res) => {
-//     try {
-//         const { groupid } = req.params;
-//         if (!groupid) {
-//             return res.status(400).json({ error: 'Group ID is required' });
-//         }
-
-//         const record = await approvalModel.findOne({ group: groupid }).populate('group').execPopulate();
-//         console.log(record);
-//         if (!record) {
-//             return res.status(404).json({ error: 'Record not found' });
-//         }
-      
-//         const existingRecord = await approvalactionModel.findOne({ group: groupid });
-//         if (existingRecord) {
-//             return res.status(400).json({ error: 'Approval action record already exists for this group' });
-//         }
-
-//         const approvalActionRecord = await approvalactionModel.create(record);
-//         return res.status(200).json(approvalActionRecord);
-       
-//     } catch (error) {
-//         console.error(error);
-//         return res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// };
-
 const findbyId = async(req,res) => {
     try {
         const { id } = req.params;
