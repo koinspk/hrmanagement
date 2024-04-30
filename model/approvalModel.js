@@ -8,7 +8,7 @@ const approvalSchema = new Schema({
     approval: [{
         action: { type: Boolean, default: false },
         approver: [{ 
-            user: [{ type: Schema.Types.ObjectId, ref: "user" }],
+            user: [{ type: Schema.Types.ObjectId, ref: "User" }],
             status: { type: Number, default: 0 },
             remark: String 
         }]

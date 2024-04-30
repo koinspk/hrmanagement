@@ -17,13 +17,13 @@ const _post = async(req,res) => {
 const _get = async(req,res) => {
     try {
         // let response = await approvalModel.find().populate('group');
-        const { filter, skip, limit, sort, projection, population } = aqp(req.query);
+        const { filter, skip, limit, sort, projection } = aqp(req.query);
         let response =  await approvalModel.find(filter)
         .skip(skip)
         .limit(limit)
         .sort(sort)
         .select(projection)
-        .populate(population);
+        .populate("group").populate("approval.approver.user");
         let totalcount = await approvalModel.countDocuments(filter);
         return res.status(201).send({response,totalcount});
 
