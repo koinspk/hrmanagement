@@ -3,6 +3,7 @@ const approvalactionModel = require('../model/approvalactionModel')
 
 const _post = async(req,res) => {
     const record = req.body;
+    console.log(req.body)
     try {
         let response = await approvalModel.create(record);
         return res.status(201).send(response);
