@@ -1,4 +1,4 @@
-const usergroupModel = require('../model/UGroupmodel');
+const usergroupModel = require('../model/usergroup');
 const aqp = require('api-query-params');
 
 const _post = async(req,res) => {
