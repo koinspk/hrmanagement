@@ -1,4 +1,5 @@
-const usergroupModel = require('../model/usergroupModel');
+const usergroupModel = require('../model/UGroupmodel');
+const aqp = require('api-query-params');
 
 const _post = async(req,res) => {
     const record = req.body;
@@ -15,8 +16,10 @@ const _post = async(req,res) => {
 
 const _get = async(req,res) => {
     try {
-        let response = await usergroupModel.find().populate('user');
-        return res.status(201).send(response);
+        const { limit, skip } = aqp(req.query);
+        let response = await usergroupModel.find().limit(limit).skip(skip);
+        let totalcount = await usergroupModel.countDocuments()
+        return res.status(201).send({response,totalcount});
     } catch (error) {
         return res.status(403).send(error)
     }
