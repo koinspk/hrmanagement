@@ -11,9 +11,6 @@ const _post = async (req, res) => {
         return res.status(403).send(error);
     }
 }
-// const jsonData = fs.readFileSync(filePath, 'utf8');
-// const data = JSON.parse(jsonData);
-// res.json(data);
 
 const _get = async (req, res) => {
     try {
