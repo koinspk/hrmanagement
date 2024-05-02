@@ -1,5 +1,6 @@
 const approvalModel = require('../model/approvalModel');
 const approvalactionModel = require('../model/approvalactionModel')
+const nodemailer = require('nodemailer');
 const aqp = require('api-query-params');
 
 const _post = async(req,res) => {
@@ -7,6 +8,19 @@ const _post = async(req,res) => {
     console.log(req.body)
     try {
         let response = await approvalModel.create(record);
+        const mailOptions = {
+            from: 'hari95nn@outlook.com',
+            to: 'recipient@example.com', 
+            subject: 'New Approval Request',
+            text: 'A new approval request has been created.'
+        };
+        transport.sendMail(mailOptions, function(error, info) {
+            if (error) {
+                console.error('Error sending email:', error);
+            } else {
+                console.log('Email sent:', info.response);
+            }
+        });
         return res.status(201).send(response);
     } catch (error) {
         console.log(error);
@@ -83,11 +97,42 @@ const findbyIdandUpdate = async(req,res) => {
 }
 }
 
+
+const editRecord = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const updatedRecord = await approvalModel.findByIdAndUpdate(id);
+  
+      if (!updatedRecord) {
+        return res.status(404).json({ error: 'Record not found' });
+      }
+  
+      return res.status(200).json(updatedRecord);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+ 
+const transport = nodemailer.createTransport({
+    pool: true,
+    host: 'smtp.office365.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: 'hari95nn@outlook.com',
+      pass: 'Hari@123,,'
+    }
+}); 
+
+
 module.exports = {
     _post,
     _get,
     findbyId,
     findbyIdanddelete,
     findbyIdandUpdate,
-    leaveRequest
+    leaveRequest,
+    editRecord,
+    transport
 }
